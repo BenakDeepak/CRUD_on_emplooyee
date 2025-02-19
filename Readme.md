@@ -19,7 +19,11 @@ CREATE TABLE IF NOT EXISTS employees (
     dob DATE NOT NULL
 );
 ```
-
+### **run the requiremnts.txt file:**
+Start  with:  
+```bash
+pip install -r requirements.txt
+```
 ### **Run the API Server:**
 Start the FastAPI server with:  
 ```bash
