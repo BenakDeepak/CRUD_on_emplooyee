@@ -2,7 +2,14 @@ from fastapi import FastAPI, HTTPException
 import mysql.connector
 import csv
 import os
+from fastapi import  Depends
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+from starlette.requests import Request
 
+
+# Set up Jinja2 for templates
+templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 
 DB_CONFIG = {
@@ -62,6 +69,17 @@ def save_db_to_csv():
 
 
 load_csv_to_db()
+
+@app.get("/", response_class=HTMLResponse)
+def read_root(request: Request):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM employees")
+    employees = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return templates.TemplateResponse("index.html", {"request": request, "employees": employees})
 
 
 @app.get("/employees/")
